@@ -1140,20 +1140,7 @@
         });
 
         // 备份通道：同时向表单编码参数提交一次以防后端使用 e.parameter 读取
-        const formParams = new URLSearchParams();
-        formParams.append("name", submissionData.name);
-        formParams.append("class", submissionData.class);
-        formParams.append("duration", submissionData.duration);
-        formParams.append("timestamp", submissionData.timestamp);
-        formParams.append("data", JSON.stringify(submissionData));
         
-        fetch(GOOGLE_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formParams.toString(),
-          mode: "no-cors"
-        }).catch(() => {});
-      } catch (e) {
         console.warn("网络请求发送尝试:", e);
       }
 
