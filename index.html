@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="zh-MY">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小学科学 试卷二 在线交互测评 (Sains Kertas 2)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons for UI and Audio/Translate buttons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-700">
+
+  <!-- 顶部状态栏 -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-md shadow-blue-200">
+          科
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">科学 试卷二 · 主观题测评</h1>
+          <p class="text-xs text-slate-500">Sains Kertas 2 · Latihan Interaktif Subjektif</p>
+        </div>
+      </div>
+      
+      <!-- 学生身份信息与进度提示 -->
+      <div id="top-user-badge" class="hidden flex items-center space-x-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full">
+        <i class="ph ph-user text-blue-600"></i>
+        <span id="badge-name" class="font-semibold text-slate-700">学生姓名</span>
+        <span class="text-slate-300">|</span>
+        <span id="badge-class" class="text-slate-500">班级</span>
+      </div>
+    </div>
+
+    <!-- 顶部答题进度指示条 (答题阶段才显示) -->
+    <div id="progress-container" class="hidden w-full bg-slate-100 h-1.5">
+      <div id="progress-bar" class="bg-blue-600 h-1.5 transition-all duration-300 ease-out" style="width: 12.5%;"></div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl w-full mx-auto p-4 sm:p-6 flex-1 flex flex-col justify-center">
+
+    <!-- PAGE 0: 封面与学生信息登记 -->
+    <section id="page-start" class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-sm text-center max-w-lg mx-auto w-full my-6">
+      <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 border border-blue-100">
+        <i class="ph ph-note-pencil"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-900 mb-2">小学科学 试卷二</h2>
+      <p class="text-sm text-slate-500 mb-5">全卷共 8 题，每次专注回答一题。支持双语对照、语音朗读与句式辅助。提交后即可查看采分点与参考答案！</p>
+
+      <!-- 醒目的课本与作业参考提醒框 -->
+      <div class="mb-6 p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-left shadow-sm flex items-start gap-3 animate-pulse">
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-amber-950 flex items-center justify-center text-xl shrink-0 font-bold shadow-xs">
+          <i class="ph ph-books"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-sm font-bold text-amber-950 flex items-center gap-1.5">
+            <span>📢 作答前重要温馨提醒</span>
+            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full font-semibold">必读</span>
+          </h3>
+          <p class="text-xs sm:text-sm font-medium text-amber-900 leading-relaxed">
+            请同学们在开始作答前，<b>拿出你的【科学课本】和【科学作业】</b>放在桌旁随时翻阅参考，遇到不确定的概念可以查书确认后再输入作答哦！
+          </p>
+          <p class="text-[11px] text-amber-800">
+            Sila sediakan Buku Teks dan Buku Aktiviti Sains anda sebagai rujukan sepanjang latihan ini.
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-left">
+        <div>
+          <label for="input-name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+            学生姓名 / Nama Murid <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="input-name" placeholder="请输入你的中英文姓名..." 
+            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm">
+        </div>
+        <div>
+          <label for="input-class" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+            班级 / Kelas (选填)
+          </label>
+          <input type="text" id="input-class" placeholder="例如：4A / 5 Melur / 6B" 
+            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm">
+        </div>
+        
+        <div id="start-error" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200 flex items-center gap-1.5">
+          <i class="ph ph-warning-circle text-base"></i>
+          <span>请先输入你的姓名，方可开始作答。</span>
+        </div>
+
+        <button type="button" id="btn-start" onclick="startExam()" 
+          class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-2 mt-2">
+          <span>🚀 开始第 1 题作答</span>
+          <i class="ph ph-arrow-right font-bold"></i>
+        </button>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-slate-100 flex items-center justify-center gap-4 text-xs text-slate-400">
+        <span class="flex items-center gap-1"><i class="ph ph-speaker-high"></i> 支持朗读</span>
+        <span>•</span>
+        <span class="flex items-center gap-1"><i class="ph ph-translate"></i> 马来文翻译</span>
+        <span>•</span>
+        <span class="flex items-center gap-1"><i class="ph ph-check-circle"></i> 提交后核对</span>
+      </div>
+
+      <!-- 首页下方成绩榜 / 提交记录榜 -->
+      <div class="mt-8 pt-6 border-t-2 border-dashed border-slate-200 text-left">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-base font-bold">
+              <i class="ph ph-trophy"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 leading-none">答题提交记录与光荣榜</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Senarai Rekod Penghantaran Murid</p>
+            </div>
+          </div>
+          <button type="button" onclick="loadLeaderboard()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium">
+            <i class="ph ph-arrows-clockwise" id="icon-refresh"></i> 刷新榜单
+          </button>
+        </div>
+
+        <!-- 榜单容器 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 min-h-[140px] max-h-56 overflow-y-auto custom-scrollbar">
+          <div id="leaderboard-loading" class="flex flex-col items-center justify-center py-6 text-slate-400 text-xs gap-2">
+            <i class="ph ph-circle-notch animate-spin text-xl text-blue-500"></i>
+            <span>正在连接 Google 表格同步最新提交记录...</span>
+          </div>
+
+          <div id="leaderboard-empty" class="hidden text-center py-6 text-slate-400 text-xs">
+            <i class="ph ph-tray text-2xl mb-1 block text-slate-300"></i>
+            暂无提交记录，快来成为第一个完成提交的同学吧！
+          </div>
+
+          <ul id="leaderboard-list" class="divide-y divide-slate-200/80 hidden">
+            <!-- 动态注入名单 -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 1: 第 1 题 -->
+    <section id="q-page-1" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <!-- 题头与双语/朗读工具 -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 1 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 4 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('q1-title-zh', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-600 rounded-lg text-xs font-medium text-slate-600 transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读中文
+            </button>
+            <button type="button" onclick="toggleTranslation('q1')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 题目说明 -->
+        <div class="mb-5">
+          <p id="q1-title-zh" class="text-base font-semibold text-slate-900">
+            1. (a) 图1显示植物适应干燥气候的方法。在 (i) 和 (ii) 的空格里，写上正确的答案，完成图1。[2分]
+          </p>
+          <div id="q1-trans" class="hidden mt-2 p-3 bg-amber-50/80 border border-amber-200 text-amber-900 rounded-xl text-xs sm:text-sm">
+            <div class="flex justify-between items-start">
+              <p><b>Rajah 1</b> menunjukkan cara tumbuhan menyesuaikan diri dengan iklim kering. Pada ruang kosong (i) dan (ii), tuliskan jawapan yang betul untuk melengkapkan Rajah 1.</p>
+              <button onclick="speakText('Rajah satu menunjukkan cara tumbuhan menyesuaikan diri dengan iklim kering.', 'ms-MY')" class="ml-2 text-amber-700 hover:text-amber-900"><i class="ph ph-speaker-high"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 原卷图1展示与填空区 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+          <div class="flex justify-center mb-4">
+            <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s1.PNG" 
+                 alt="图1 植物适应干燥气候的方法" 
+                 class="max-w-full md:max-w-lg h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8fafc/475569?text=图1加载中...';" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <label class="text-xs font-bold text-slate-800 block mb-1.5">(i) 填写橡胶树适应干燥的方法：</label>
+              <textarea id="ans_q1_a1" rows="2" placeholder="在此输入 (i) 的答案..." class="w-full text-xs sm:text-sm p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <button type="button" onclick="insertKeyword('ans_q1_a1', '落叶')" class="mt-2 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-2.5 py-1 rounded-md font-medium transition">+ 填入关键词：落叶</button>
+            </div>
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <label class="text-xs font-bold text-slate-800 block mb-1.5">(ii) 填写仙人掌适应干燥的方法：</label>
+              <textarea id="ans_q1_a2" rows="2" placeholder="在此输入 (ii) 的答案..." class="w-full text-xs sm:text-sm p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <button type="button" onclick="insertKeyword('ans_q1_a2', '针状叶 / 储存水分的茎')" class="mt-2 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-2.5 py-1 rounded-md font-medium transition">+ 填入关键词：针状叶 / 储水茎</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 小题 (b) -->
+        <div class="space-y-4">
+          <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-100 text-xs sm:text-sm text-blue-950">
+            <span class="font-bold">(b) 说明：</span>生长在多风地区的植物 Y 有坚韧的茎部。(Tumbuhan Y yang hidup di kawasan berangin mempunyai batang yang mudah melentur / liat.)
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="ans_q1_b1" class="text-xs sm:text-sm font-bold text-slate-800">
+                (b)(i) 根据上面的说明，写出有坚韧的茎部的一个好处。[1分]
+              </label>
+              <button type="button" onclick="speakText('根据上面的说明，写出有坚韧的茎部的一个好处。', 'zh-CN')" class="text-slate-400 hover:text-blue-600 text-xs"><i class="ph ph-speaker-high"></i></button>
+            </div>
+            <!-- 思考提示 Tips -->
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900 flex items-start gap-2">
+              <i class="ph ph-lightbulb font-bold text-amber-600 text-sm mt-0.5"></i>
+              <div>
+                <b>答题思路提示：</b>想一想大风吹来时，坚韧的茎部可以弯曲，从而防止植物遭受怎样的损坏？
+                <div class="mt-1">
+                  <button type="button" onclick="insertKeyword('ans_q1_b1', '不会轻易被强风的吹袭折断。')" class="text-amber-800 underline hover:text-amber-950 font-medium">👉 点击使用参考句式：不会轻易被强风的吹袭折断。</button>
+                </div>
+              </div>
+            </div>
+            <textarea id="ans_q1_b1" rows="2" placeholder="在此输入你的回答 (Tulis jawapan anda di sini)..." class="w-full text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="ans_q1_b2" class="text-xs sm:text-sm font-bold text-slate-800">
+                (b)(ii) 写出植物 Y 适应多风的气候的另一个特征。[1分]
+              </label>
+              <button type="button" onclick="speakText('写出植物 Y 适应多风的气候的另一个特征。', 'zh-CN')" class="text-slate-400 hover:text-blue-600 text-xs"><i class="ph ph-speaker-high"></i></button>
+            </div>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900 flex items-start gap-2">
+              <i class="ph ph-lightbulb font-bold text-amber-600 text-sm mt-0.5"></i>
+              <span><b>提示：</b>回想椰树或竹子的叶子构造（例如像羽毛般的形状）或根部构造。</span>
+            </div>
+            <textarea id="ans_q1_b2" rows="2" placeholder="在此输入你的回答..." class="w-full text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 2: 第 2 题 -->
+    <section id="q-page-2" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 2 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 4 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('2. 图2显示人体的一种系统。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读中文
+            </button>
+            <button type="button" onclick="toggleTranslation('q2')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+          <!-- 示意图区 -->
+          <div class="md:col-span-1 bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col items-center justify-center text-center">
+            <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s2.PNG" 
+                 alt="图2 人体系统" 
+                 class="max-w-full max-h-72 object-contain rounded-lg border border-slate-200 shadow-sm bg-white" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/300x400/f8fafc/475569?text=图2加载中...';" />
+            <p class="font-bold text-sm text-slate-700 mt-2">图 2 / Rajah 2</p>
+          </div>
+
+          <div class="md:col-span-2 space-y-4">
+            <div id="q2-trans" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+              <p><b>Rajah 2</b> menunjukkan satu sistem dalam tubuh manusia.</p>
+              <p class="mt-1">(a) Nyatakan nama sistem Rajah 2.</p>
+              <p>(b) Nyatakan hubungan antara sistem Rajah 2 dengan sistem peredaran darah.</p>
+            </div>
+
+            <div>
+              <label for="ans_q2_a" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+                (a) 写出图2系统的名称。[1分]
+              </label>
+              <textarea id="ans_q2_a" rows="1" placeholder="系统名称 (Nama sistem)..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+
+            <div>
+              <label for="ans_q2_b" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+                (b) 写出图2系统与血液循环系统的关系。[1分]
+              </label>
+              <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+                💡 <b>提示</b>：血液循环系统怎样为骨骼提供营养？或者骨骼怎样保护心脏等器官？
+                <div class="mt-1.5 flex flex-wrap gap-1.5">
+                  <button type="button" onclick="insertKeyword('ans_q2_b', '血液循环系统为骨骼系统输送氧气和营养素。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">填入：血液为骨骼输送营养</button>
+                  <button type="button" onclick="insertKeyword('ans_q2_b', '骨骼系统能保护内脏（如心脏）免受伤害。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">填入：骨骼保护内脏</button>
+                </div>
+              </div>
+              <textarea id="ans_q2_b" rows="2" placeholder="在此说明两者的互补或协作关系..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4 pt-2 border-t border-slate-100">
+          <div>
+            <label for="ans_q2_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (c) 写出一个方法保护人体系统。[1分]
+            </label>
+            <textarea id="ans_q2_c" rows="2" placeholder="例如良好的饮食习惯或防范措施..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div>
+            <div class="bg-blue-50/70 p-2.5 rounded-lg border border-blue-100 text-xs text-blue-900 mb-2">
+              <b>(d) 情境说明：</b>诗宣吃东西时被食物哽着，导致她呼吸困难。根据说明，作出一个推断。[1分]
+            </div>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2 mb-2 text-xs text-amber-900">
+              💡 <b>推断方向</b>：食物被咽住的位置阻挡了什么管道？空气还能不能顺畅吸入肺部？
+            </div>
+            <textarea id="ans_q2_d" rows="2" placeholder="写出导致呼吸困难的具体原因推断..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 3: 第 3 题 -->
+    <section id="q-page-3" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 3 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 5 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('3. 图3显示一种自然现象。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q3')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4 flex flex-col items-center justify-center">
+          <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s3.PNG" 
+               alt="图3 自然现象" 
+               class="max-w-full md:max-w-md h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+               onerror="this.onerror=null; this.src='https://placehold.co/500x320/f8fafc/475569?text=图3加载中...';" />
+          <p class="font-bold text-xs text-slate-600 mt-2">图 3 / Rajah 3</p>
+        </div>
+
+        <div id="q3-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p><b>Rajah 3</b> menunjukkan satu fenomena semula jadi.</p>
+          <p>(a) Nyatakan fenomena semula jadi di atas.</p>
+          <p>(b) Nyatakan nama proses perubahan keadaan jirim bagi J dan K.</p>
+          <p>(c) Nyatakan satu contoh dalam kehidupan seharian yang mempunyai proses perubahan sama seperti J dan K.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="ans_q3_a" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (a) 根据图3，写出上面的自然现象。[1分]
+            </label>
+            <textarea id="ans_q3_a" rows="1" placeholder="自然现象名称 (Nama fenomena semula jadi)..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (b) 根据图3，写出下面的形态变化的过程的名称。[2分]
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <span class="text-xs text-slate-500 block mb-1">(i) 过程 J（水蒸气冷却成小水滴）：</span>
+                <textarea id="ans_q3_b1" rows="1" placeholder="填写过程 J 名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              </div>
+              <div>
+                <span class="text-xs text-slate-500 block mb-1">(ii) 过程 K（水受热化为水蒸气）：</span>
+                <textarea id="ans_q3_b2" rows="1" placeholder="填写过程 K 名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (c) 各写出一项生活中的形态变化过程与 J 和 K 相同的例子。[2分]
+            </label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>生活观察</b>：冰水杯外壁出现水珠属于哪一种？晒湿衣服、煮开水冒烟又是哪一种？
+            </div>
+            <div class="space-y-2">
+              <textarea id="ans_q3_c1" rows="1" placeholder="(i) 生活中类似 J (凝聚) 的例子..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <textarea id="ans_q3_c2" rows="1" placeholder="(ii) 生活中类似 K (蒸发) 的例子..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 4: 第 4 题 -->
+    <section id="q-page-4" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 4 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 5 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('4. 图4显示某个栖息地的生物。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q4')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 栖息地原图展示 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4 flex flex-col items-center justify-center">
+          <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s4.PNG" 
+               alt="图4 某个栖息地的生物" 
+               class="max-w-full md:max-w-md h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+               onerror="this.onerror=null; this.src='https://placehold.co/500x300/f8fafc/475569?text=图4加载中...';" />
+          <p class="font-bold text-xs text-slate-600 mt-2">图 4 / Rajah 4</p>
+        </div>
+
+        <div id="q4-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p><b>Rajah 4</b> menunjukkan hidupan di satu habitat.</p>
+          <p>(a) Nyatakan habitat pada Rajah 4.</p>
+          <p>(b) Tuliskan satu pengguna primer berdasarkan Rajah 4.</p>
+          <p>(c) Bina satu siratan makanan dalam ruang berikut.</p>
+          <p>(d) Bilangan arnab dipengaruhi oleh bilangan helang. Buat satu hipotesis.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ans_q4_a" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a) 写出图4的栖息地。[1分]</label>
+              <textarea id="ans_q4_a" rows="1" placeholder="例如：森林 / 树林..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <div>
+              <label for="ans_q4_b" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(b) 写出一个初级消费者。[1分]</label>
+              <textarea id="ans_q4_b" rows="1" placeholder="直接以植物为食的动物..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label for="ans_q4_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (c) 用文字与箭头表述生物之间的食物网/食物链关系。[2分]
+            </label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>答题指引</b>：可以用文字加箭头表示（如：草 ➔ 兔子 ➔ 老鹰）。至少写出互相交错的关系。
+              <div class="mt-1">
+                <button type="button" onclick="insertKeyword('ans_q4_c', '草 ➔ 蚱蜢 ➔ 鸡 ➔ 狐狸 / 老鹰\n草 ➔ 兔子 ➔ 老鹰')" class="text-amber-800 underline hover:text-amber-950 font-medium">👉 点击填入食物链参考骨架</button>
+              </div>
+            </div>
+            <textarea id="ans_q4_c" rows="3" placeholder="草 ➔ ..." class="w-full text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div>
+            <label for="ans_q4_d" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">
+              (d) 兔子的数量会受到老鹰数量的影响。根据说明作出一个假设。[1分]
+            </label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>假设标准句式</b>：……的数量越（多/少），……的数量越（多/少）。
+              <div class="mt-1 flex flex-wrap gap-2">
+                <button type="button" onclick="insertKeyword('ans_q4_d', '老鹰的数量越多，兔子的数量越少。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">句式 1：老鹰越多，兔子越少</button>
+                <button type="button" onclick="insertKeyword('ans_q4_d', '老鹰的数量越少，兔子的数量越多。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">句式 2：老鹰越少，兔子越多</button>
+              </div>
+            </div>
+            <textarea id="ans_q4_d" rows="2" placeholder="写出假设句子..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 5: 第 5 题 -->
+    <section id="q-page-5" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 5 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 5 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('5. 图5显示一种机械。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q5')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+          <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s5.PNG" 
+               alt="图5 机械" 
+               class="max-w-full md:max-w-xs h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+               onerror="this.onerror=null; this.src='https://placehold.co/400x300/f8fafc/475569?text=图5加载中...';" />
+          <p class="font-bold text-slate-700 text-xs mt-2">图 5 / Rajah 5</p>
+        </div>
+
+        <div id="q5-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p><b>Rajah 5</b> menunjukkan sejenis mesin (pemotong kuku).</p>
+          <p>(a) Nyatakan kegunaan mesin pada Rajah 5.</p>
+          <p>(b) Nyatakan bilangan prinsip mesin ringkas yang diaplikasikan.</p>
+          <p>(c) Nyatakan satu prinsip mesin ringkas yang terlibat.</p>
+          <p>(d) Nyatakan dua mesin lain yang mengaplikasikan prinsip mesin ringkas yang sama.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="ans_q5_a" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a) 写出图5机械的用途。[1分]</label>
+            <textarea id="ans_q5_a" rows="1" placeholder="填写用途 (Kegunaan)..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ans_q5_b" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(b) 写出它应用的简单机械原理数量。[1分]</label>
+              <textarea id="ans_q5_b" rows="1" placeholder="例如：2种" class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <div>
+              <label for="ans_q5_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(c) 写出其中一种简单机械原理。[1分]</label>
+              <textarea id="ans_q5_c" rows="1" placeholder="杠杆 / 尖劈..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(d) 写出另两种机械所涉及到的简单机械原理与图5机械相同。[2分]</label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>联想思考</b>：日常生活中还有哪些剪裁、砍伐工具同时用了杠杆或尖劈原理？
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <textarea id="ans_q5_d1" rows="1" placeholder="机械 (i)：例如 剪刀 / 斧头..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <textarea id="ans_q5_d2" rows="1" placeholder="机械 (ii)：例如 切纸机..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 6: 第 6 题 -->
+    <section id="q-page-6" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 6 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 5 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('6. 图6.1与图6.2显示有关热胀冷缩的实验与情境。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q6')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="q6-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p><b>Rajah 6.1</b> menunjukkan satu eksperimen di mana belon mengembang apabila kelalang kon diletakkan di dalam air panas.</p>
+          <p>(a)(i) Ramalkan suhu air dalam °C?</p>
+          <p>(a)(ii) Buat satu inferens berdasarkan jawapan anda di (a)(i).</p>
+          <p>(b) Dalam eksperimen lain, belon mengecut. Ramalkan objek yang diletakkan dalam mangkuk?</p>
+          <p>(c) Nyatakan satu alat yang mengaplikasikan prinsip pengembangan dan pengecutan.</p>
+          <p>(d) Apakah yang akan berlaku jika pekerja memasang wayar elektrik terlalu tegang?</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
+            <span class="font-bold text-xs sm:text-sm text-slate-800 block mb-2">实验 6.1：锥形瓶套着气球，浸在热水里时，气球膨胀了起来。</span>
+            <div class="flex justify-center">
+              <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s6.PNG" 
+                   alt="图6.1 热水实验" 
+                   class="max-w-full md:max-w-xs h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+                   onerror="this.onerror=null; this.src='https://placehold.co/400x260/f8fafc/475569?text=图6.1加载中...';" />
+            </div>
+            <p class="font-bold text-xs text-slate-500 mt-1">图 6.1 / Rajah 6.1</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ans_q6_a1" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a)(i) 推测这盆热水的温度是多少摄氏度？[1分]</label>
+              <textarea id="ans_q6_a1" rows="1" placeholder="例如：80°C" class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <div>
+              <label for="ans_q6_a2" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a)(ii) 根据你的答案，作出一个推断。[1分]</label>
+              <textarea id="ans_q6_a2" rows="1" placeholder="推断原因（空气受热后……）" class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ans_q6_b" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(b) 若另一项实验中气球缩小了，推测碗里放了什么？[1分]</label>
+              <textarea id="ans_q6_b" rows="1" placeholder="放入的冷物体..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <div>
+              <label for="ans_q6_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(c) 写出一个利用热胀冷缩原理测量的工具。[1分]</label>
+              <textarea id="ans_q6_c" rows="1" placeholder="测量工具名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <div class="bg-blue-50/70 p-3 rounded-lg border border-blue-100 text-xs sm:text-sm text-blue-900 mb-2">
+              <b>(d) 图 6.2 生活情境：</b>如果工人在电线杆上把电线拉得很紧，到了寒冷天气时将会发生什么事？[1分]
+              <div class="flex justify-center my-3">
+                <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s6b.PNG" 
+                     alt="图6.2 安装电线" 
+                     class="max-w-full md:max-w-xs h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x240/f8fafc/475569?text=图6.2加载中...';" />
+              </div>
+              <p class="font-bold text-center text-xs text-slate-500">图 6.2 / Rajah 6.2</p>
+            </div>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>思考句式</b>：遇冷会收缩，如果绷得太紧会导致……
+              <div class="mt-1">
+                <button type="button" onclick="insertKeyword('ans_q6_d', '在冷天气里，电线会因为遇冷收缩而被扯断。')" class="text-amber-800 underline hover:text-amber-950 font-medium">👉 点击填入完整句式：在冷天气里，电线会因为遇冷收缩而被扯断。</button>
+              </div>
+            </div>
+            <textarea id="ans_q6_d" rows="2" placeholder="写出具体后果及科学原因..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 7: 第 7 题 -->
+    <section id="q-page-7" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 7 / 8 题</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 6 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('7. 图7显示两种星座，X和Y。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q7')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+          <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s7.PNG" 
+               alt="图7 星座X和Y" 
+               class="max-w-full md:max-w-md h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+               onerror="this.onerror=null; this.src='https://placehold.co/500x260/f8fafc/475569?text=图7加载中...';" />
+          <p class="font-bold text-xs text-slate-600 mt-2">图 7 / Rajah 7</p>
+        </div>
+
+        <div id="q7-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p><b>Rajah 7</b> menunjukkan dua buruj, X dan Y.</p>
+          <p>(a) Nyatakan nama kedua-dua buruj tersebut.</p>
+          <p>(b) Nyatakan kedudukan buruj ini muncul sepanjang tahun (Hemisfera Selatan / Hemisfera Utara).</p>
+          <p>(c) Buruj Y merupakan sebahagian daripada buruj yang mana?</p>
+          <p>(d) Apakah yang dimaksudkan dengan buruj?</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a) 写出这两个星座的名称：[2分]</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <textarea id="ans_q7_a1" rows="1" placeholder="星座 X 名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <textarea id="ans_q7_a2" rows="1" placeholder="星座 Y 名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(b) 写出这两个星座常年出现的位置（南半球 / 北半球）：[2分]</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <textarea id="ans_q7_b1" rows="1" placeholder="星座 X 出现位置..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <textarea id="ans_q7_b2" rows="1" placeholder="星座 Y 出现位置..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="ans_q7_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(c) 星座 Y 是哪个大星座的一部分？[1分]</label>
+              <textarea id="ans_q7_c" rows="1" placeholder="大星座名称..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <div>
+              <label for="ans_q7_d" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(d) 什么是星座？[1分]</label>
+              <textarea id="ans_q7_d" rows="1" placeholder="星座的定义说明..." class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 8: 第 8 题 -->
+    <section id="q-page-8" class="question-page hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-lg">第 8 / 8 题 (最后一题)</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">[共 6 分]</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="speakText('8. 冠易进行一项实验。他装置一个电路，并每增加一个灯泡后记录灯泡的亮度。', 'zh-CN')" class="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-speaker-high text-sm"></i> 朗读
+            </button>
+            <button type="button" onclick="toggleTranslation('q8')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-medium transition flex items-center gap-1">
+              <i class="ph ph-translate text-sm"></i> <span>BM 翻译</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4 flex flex-col items-center justify-center">
+          <p class="text-xs text-slate-600 mb-2 font-semibold">表1：电路中灯泡数量与亮度的实验记录</p>
+          <img src="https://raw.githubusercontent.com/mrzzzz2/quizassetsntest2/refs/heads/main/s8.PNG" 
+               alt="表1 实验结果" 
+               class="max-w-full md:max-w-sm h-auto rounded-lg border border-slate-200 shadow-sm bg-white" 
+               onerror="this.onerror=null; this.src='https://placehold.co/450x260/f8fafc/475569?text=表1加载中...';" />
+          <p class="font-bold text-xs text-slate-600 mt-2">表 1 / Jadual 1</p>
+        </div>
+
+        <div id="q8-trans" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs">
+          <p>Guan Yi menjalankan satu eksperimen litar elektrik.</p>
+          <p>(a) Nyatakan tujuan eksperimen ini.</p>
+          <p>(b) Tuliskan dua maklumat yang dikumpul dalam eksperimen.</p>
+          <p>(c) Berdasarkan Jadual 1, buat satu hipotesis.</p>
+          <p>(d) Huraikan perkaitan atau aliran hubungan antara bilangan mentol dengan kecerahan.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label for="ans_q8_a" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(a) 写出这项实验的目的。[1分]</label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>目的的标准答题句式</b>：为了研究【操作性变数】和【反应性变数】之间的关系。
+              <div class="mt-1">
+                <button type="button" onclick="insertKeyword('ans_q8_a', '为了研究灯泡的数量和灯泡的亮度之间的关系。')" class="text-amber-800 underline hover:text-amber-950 font-medium">👉 点击一键填入标准目的句式</button>
+              </div>
+            </div>
+            <textarea id="ans_q8_a" rows="2" placeholder="为了研究……" class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(b) 写出这项实验中所收集到的两个资料（变数）。[2分]</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <textarea id="ans_q8_b1" rows="1" placeholder="资料 (i)：例如 灯泡的数量" class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+              <textarea id="ans_q8_b2" rows="1" placeholder="资料 (ii)：例如 灯泡的亮度" class="w-full text-sm p-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label for="ans_q8_c" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(c) 根据表1，作出一个假设。[1分]</label>
+            <div class="bg-amber-50/60 border border-amber-200 rounded-lg p-2.5 mb-2 text-xs text-amber-900">
+              💡 <b>假设标准句式</b>：……越（多/少），……越（亮/暗淡）。
+              <div class="mt-1 flex flex-wrap gap-2">
+                <button type="button" onclick="insertKeyword('ans_q8_c', '灯泡的数量越多，灯泡的亮度越暗淡。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">句式 1：数量越多，亮度越暗淡</button>
+                <button type="button" onclick="insertKeyword('ans_q8_c', '灯泡的数量越少，灯泡的亮度越亮。')" class="text-[11px] bg-white border border-amber-300 px-2 py-0.5 rounded text-amber-800 hover:bg-amber-100">句式 2：数量越少，亮度越亮</button>
+              </div>
+            </div>
+            <textarea id="ans_q8_c" rows="2" placeholder="写出假设..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+
+          <div>
+            <label for="ans_q8_d" class="block text-xs sm:text-sm font-bold text-slate-800 mb-1">(d) 描述灯泡数量和灯泡亮度之间的条形图关系与趋势。[2分]</label>
+            <textarea id="ans_q8_d" rows="2" placeholder="描述数量增加时亮度条形图的高度变化..." class="w-full text-sm p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RESULT PAGE: 提交后成绩单与核对答案 -->
+    <section id="page-result" class="hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-sm mb-6">
+        <div class="text-center max-w-md mx-auto mb-8">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-3 shadow-inner">
+            <i class="ph ph-check-fat"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900">试卷提交成功！</h2>
+          <p class="text-sm text-slate-500 mt-1">恭喜你完成全部 8 题！以下为你呈现每题的标准参考答案与采分要点，请逐题比对。</p>
+          <div class="mt-4 inline-flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl text-xs sm:text-sm text-slate-700">
+            <span>考生：<b id="result-name">-</b></span>
+            <span>•</span>
+            <span>班级：<b id="result-class">-</b></span>
+            <span>•</span>
+            <span class="text-emerald-600 font-semibold">已解锁全部答案</span>
+          </div>
+        </div>
+
+        <!-- 详细逐题对比区 -->
+        <div class="space-y-6" id="review-list">
+          <!-- 动态注入或展示比对内容 -->
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 flex flex-wrap justify-center gap-3">
+          <button type="button" onclick="window.print()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl flex items-center gap-2 transition">
+            <i class="ph ph-printer"></i> 打印 / 保存为 PDF
+          </button>
+          <button type="button" onclick="restartExam()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl flex items-center gap-2 transition">
+            <i class="ph ph-arrow-counter-clockwise"></i> 重新开始练习
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 底部翻页控制器 (答题阶段显示) -->
+    <div id="exam-nav" class="hidden mt-6 flex items-center justify-between gap-3">
+      <button type="button" id="btn-prev" onclick="changePage(-1)" 
+        class="px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium rounded-xl text-sm transition flex items-center gap-1.5 shadow-xs">
+        <i class="ph ph-caret-left font-bold"></i> 上一题
+      </button>
+
+      <!-- 当前页指示与快跳 -->
+      <div class="text-xs font-semibold text-slate-500 flex items-center gap-1">
+        <span id="current-page-num" class="text-blue-600 font-bold text-base">1</span>
+        <span>/ 8</span>
+      </div>
+
+      <button type="button" id="btn-next" onclick="changePage(1)" 
+        class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-medium rounded-xl text-sm transition flex items-center gap-1.5 shadow-sm shadow-blue-400/20">
+        <span id="btn-next-text">下一题</span> <i class="ph ph-caret-right font-bold" id="btn-next-icon"></i>
+      </button>
+    </div>
+
+  </main>
+
+  <footer class="py-4 text-center text-xs text-slate-400">
+    小学科学 试卷二 在线互动题库 · KSSR Semakan
+  </footer>
+
+  <!-- 自定义弹窗 Modal (替代原生 alert/confirm) -->
+  <div id="custom-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 text-center animate-fade-in">
+      <div id="modal-icon" class="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-3 bg-amber-100 text-amber-600">
+        <i class="ph ph-warning"></i>
+      </div>
+      <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-1">提示</h3>
+      <p id="modal-message" class="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed">提示内容</p>
+      <div id="modal-actions" class="flex gap-2">
+        <button id="modal-btn-cancel" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition">取消</button>
+        <button id="modal-btn-confirm" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 题目数据源及参考答案库
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        title: "第 1 题：植物适应气候的方法",
+        subItems: [
+          { key: "ans_q1_a1", label: "(a)(i) 橡胶树适应干燥气候的方法", answer: "落叶" },
+          { key: "ans_q1_a2", label: "(a)(ii) 仙人掌适应干燥气候的方法", answer: "针状叶 / 长根 / 储存水分的茎" },
+          { key: "ans_q1_b1", label: "(b)(i) 坚韧茎部的一个好处", answer: "不会容易被强风的吹袭折断。" },
+          { key: "ans_q1_b2", label: "(b)(ii) 植物 Y 适应多风的另一个特征", answer: "有羽状的叶子 / 有细长的叶子 / 有粗壮的根（或其他适当答案）" }
+        ]
+      },
+      {
+        id: 2,
+        title: "第 2 题：人体系统",
+        subItems: [
+          { key: "ans_q2_a", label: "(a) 图2系统名称", answer: "骨骼系统" },
+          { key: "ans_q2_b", label: "(b) 与血液循环系统的关系", answer: "血液循环系统为骨骼系统输送氧气和营养素。 / 骨骼系统能保护内脏免受伤害。" },
+          { key: "ans_q2_c", label: "(c) 保护人体系统的方法", answer: "多吃富含营养/高钙的食物 / 运动时佩戴护具（或其他适当答案）" },
+          { key: "ans_q2_d", label: "(d) 食物哽着呼吸困难的推断", answer: "食物被卡在食道入口，同时阻挡空气进入气管，导致呼吸困难。" }
+        ]
+      },
+      {
+        id: 3,
+        title: "第 3 题：水循环与物态变化",
+        subItems: [
+          { key: "ans_q3_a", label: "(a) 自然现象名称", answer: "水循环" },
+          { key: "ans_q3_b1", label: "(b)(i) 形态变化过程 J", answer: "凝聚 / 凝结" },
+          { key: "ans_q3_b2", label: "(b)(ii) 形态变化过程 K", answer: "蒸发" },
+          { key: "ans_q3_c1", label: "(c)(i) 生活中类似 J 的例子", answer: "装有冰水的杯子外壁的小水珠 / 晨露" },
+          { key: "ans_q3_c2", label: "(c)(ii) 生活中类似 K 的例子", answer: "晒衣服变干 / 煮沸的水产生水蒸气" }
+        ]
+      },
+      {
+        id: 4,
+        title: "第 4 题：生态与食物网",
+        subItems: [
+          { key: "ans_q4_a", label: "(a) 栖息地", answer: "森林 / 树林 / 草原" },
+          { key: "ans_q4_b", label: "(b) 初级消费者", answer: "蚱蜢 / 鸡 / 兔子" },
+          { key: "ans_q4_c", label: "(c) 食物网", answer: "草 -> 蚱蜢 -> 鸡 -> 狐狸 / 老鹰；草 -> 兔子 -> 狐狸 / 老鹰 等" },
+          { key: "ans_q4_d", label: "(d) 兔子受老鹰影响的假设", answer: "老鹰的数量越多，兔子的数量越少。（或：老鹰的数量越少，兔子的数量越多）" }
+        ]
+      },
+      {
+        id: 5,
+        title: "第 5 题：机械原理（指甲剪）",
+        subItems: [
+          { key: "ans_q5_a", label: "(a) 机械用途", answer: "修剪指甲" },
+          { key: "ans_q5_b", label: "(b) 应用简单机械原理数量", answer: "2 种" },
+          { key: "ans_q5_c", label: "(c) 其中一种简单机械原理", answer: "杠杆 / 尖劈" },
+          { key: "ans_q5_d1", label: "(d)(i) 相同原理机械 1", answer: "剪刀 / 切纸机" },
+          { key: "ans_q5_d2", label: "(d)(ii) 相同原理机械 2", answer: "斧头 / 刨刀" }
+        ]
+      },
+      {
+        id: 6,
+        title: "第 6 题：热胀冷缩实验",
+        subItems: [
+          { key: "ans_q6_a1", label: "(a)(i) 推测水的温度", answer: "80°C（介于 50°C 至 100°C 之间均可）" },
+          { key: "ans_q6_a2", label: "(a)(ii) 推断", answer: "瓶子内的空气受热膨胀。" },
+          { key: "ans_q6_b", label: "(b) 气球缩小碗里放了什么", answer: "冰块 / 冷水" },
+          { key: "ans_q6_c", label: "(c) 利用该原理测量的工具", answer: "温度计" },
+          { key: "ans_q6_d", label: "(d) 电线拉紧在冷天气的后果", answer: "在冷天气里，电线会因为遇冷收缩而被扯断。" }
+        ]
+      },
+      {
+        id: 7,
+        title: "第 7 题：星座",
+        subItems: [
+          { key: "ans_q7_a1", label: "(a)(i) 星座 X 名称", answer: "天蝎座" },
+          { key: "ans_q7_a2", label: "(a)(ii) 星座 Y 名称", answer: "北斗七星" },
+          { key: "ans_q7_b1", label: "(b)(i) 星座 X 常年出现位置", answer: "南半球" },
+          { key: "ans_q7_b2", label: "(b)(ii) 星座 Y 常年出现位置", answer: "北半球" },
+          { key: "ans_q7_c", label: "(c) 星座 Y 是哪一部份", answer: "大熊座" },
+          { key: "ans_q7_d", label: "(d) 什么是星座", answer: "星座是由一群恒星在天空中联结所组成的图案。" }
+        ]
+      },
+      {
+        id: 8,
+        title: "第 8 题：实验探究（电路与灯泡亮度）",
+        subItems: [
+          { key: "ans_q8_a", label: "(a) 实验目的", answer: "为了研究灯泡的数量和灯泡的亮度之间的关系。" },
+          { key: "ans_q8_b1", label: "(b)(i) 收集到的资料 1", answer: "灯泡的数量" },
+          { key: "ans_q8_b2", label: "(b)(ii) 收集到的资料 2", answer: "灯泡的亮度" },
+          { key: "ans_q8_c", label: "(c) 实验假设", answer: "灯泡的数量越多，灯泡的亮度越暗淡。（或：灯泡的数量越少，灯泡的亮度越亮）" },
+          { key: "ans_q8_d", label: "(d) 统计图趋势", answer: "随着灯泡数量递增，灯泡亮度的柱子高度递减。" }
+        ]
+      }
+    ];
+
+    let currentPage = 0; // 0 为起始页, 1-8 为题目, 9 为结果页
+    const totalPages = 8;
+    let studentData = { name: '', class: '' };
+    const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbyyl5x-Eap08-OdsAVS-GmaXUqrBx1MCyjQf26YAVY9f14c6IFDP0SrP8uWhxm4JNirEA/exec";
+
+    function showModal(title, msg, onConfirm, isConfirm = false) {
+      const modal = document.getElementById('custom-modal');
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-message').textContent = msg;
+      const cancelBtn = document.getElementById('modal-btn-cancel');
+      const confirmBtn = document.getElementById('modal-btn-confirm');
+
+      if (!isConfirm) {
+        cancelBtn.classList.add('hidden');
+      } else {
+        cancelBtn.classList.remove('hidden');
+      }
+
+      confirmBtn.onclick = () => {
+        modal.classList.add('hidden');
+        if (onConfirm) onConfirm();
+      };
+      cancelBtn.onclick = () => {
+        modal.classList.add('hidden');
+      };
+      modal.classList.remove('hidden');
+    }
+
+    function startExam() {
+      const nameInput = document.getElementById('input-name');
+      const classInput = document.getElementById('input-class');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        document.getElementById('start-error').classList.remove('hidden');
+        nameInput.focus();
+        return;
+      }
+
+      studentData.name = name;
+      studentData.class = classInput.value.trim() || '未填写';
+
+      // 更新顶部 Badge
+      document.getElementById('badge-name').textContent = studentData.name;
+      document.getElementById('badge-class').textContent = studentData.class;
+      document.getElementById('top-user-badge').classList.remove('hidden');
+      document.getElementById('progress-container').classList.remove('hidden');
+      document.getElementById('exam-nav').classList.remove('hidden');
+
+      // 隐藏起始页，显示第 1 题
+      document.getElementById('page-start').classList.add('hidden');
+      goToPage(1);
+    }
+
+    function goToPage(pageIndex) {
+      // 隐藏所有题目页与结果页
+      document.querySelectorAll('.question-page').forEach(p => p.classList.add('hidden'));
+      document.getElementById('page-result').classList.add('hidden');
+
+      currentPage = pageIndex;
+
+      if (currentPage >= 1 && currentPage <= totalPages) {
+        const targetPage = document.getElementById(`q-page-${currentPage}`);
+        if (targetPage) targetPage.classList.remove('hidden');
+
+        // 更新页码指示
+        document.getElementById('current-page-num').textContent = currentPage;
+
+        // 更新上一页按钮可见性
+        const prevBtn = document.getElementById('btn-prev');
+        if (currentPage === 1) {
+          prevBtn.classList.add('opacity-40', 'cursor-not-allowed');
+          prevBtn.disabled = true;
+        } else {
+          prevBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+          prevBtn.disabled = false;
+        }
+
+        // 更新下一页/提交按钮文案
+        const nextBtn = document.getElementById('btn-next');
+        const nextText = document.getElementById('btn-next-text');
+        const nextIcon = document.getElementById('btn-next-icon');
+
+        if (currentPage === totalPages) {
+          nextText.textContent = "提交试卷并查看答案";
+          nextBtn.className = "px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20";
+          nextIcon.className = "ph ph-check-circle font-bold";
+        } else {
+          nextText.textContent = "下一题";
+          nextBtn.className = "px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-sm transition flex items-center gap-1.5 shadow-sm shadow-blue-400/20";
+          nextIcon.className = "ph ph-caret-right font-bold";
+        }
+
+        // 更新进度条
+        const percent = (currentPage / totalPages) * 100;
+        document.getElementById('progress-bar').style.width = `${percent}%`;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (currentPage > totalPages) {
+        showResultPage();
+      }
+    }
+
+    function changePage(direction) {
+      if (direction === -1) {
+        if (currentPage > 1) {
+          goToPage(currentPage - 1);
+        }
+      } else if (direction === 1) {
+        if (currentPage < totalPages) {
+          goToPage(currentPage + 1);
+        } else if (currentPage === totalPages) {
+          // 第 8 题点击提交
+          checkSubmission();
+        }
+      }
+    }
+
+    // 检查完成度并提交
+    function checkSubmission() {
+      let emptyCount = 0;
+      let totalFields = 0;
+      QUESTION_BANK.forEach(q => {
+        q.subItems.forEach(item => {
+          totalFields++;
+          const val = document.getElementById(item.key)?.value.trim() || '';
+          if (!val) emptyCount++;
+        });
+      });
+
+      if (emptyCount > 0) {
+        showModal(
+          "确认提交试卷？",
+          `全卷共有 ${totalFields} 处小题，你目前还有 ${emptyCount} 处尚未填写。提交后数据将上传至教师系统并解锁参考答案，是否现在提交？`,
+          () => {
+            submitAndFinish();
+          },
+          true
+        );
+      } else {
+        submitAndFinish();
+      }
+    }
+
+    // 收集所有答案并发送到 Google Apps Script，随后展示结果页
+    function submitAndFinish() {
+      // 收集答题数据
+      const submissionData = {
+        name: studentData.name,
+        class: studentData.class,
+        timestamp: new Date().toLocaleString("zh-CN", { timeZone: "Asia/Kuala_Lumpur" }),
+        answers: {}
+      };
+
+      QUESTION_BANK.forEach(q => {
+        q.subItems.forEach(item => {
+          submissionData.answers[item.key] = document.getElementById(item.key)?.value.trim() || '';
+        });
+      });
+
+      // 发送至 Google Apps Script Web App
+      try {
+        fetch(GOOGLE_APP_URL, {
+          method: "POST",
+          mode: "no-cors", // 避免跨域阻拦
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(submissionData)
+        }).catch(err => {
+          console.log("提交后台提示:", err);
+        });
+      } catch (e) {
+        console.log("网络请求发送尝试:", e);
+      }
+
+      goToPage(totalPages + 1);
+    }
+
+    function showResultPage() {
+      document.getElementById('exam-nav').classList.add('hidden');
+      document.getElementById('progress-container').classList.add('hidden');
+      document.getElementById('page-result').classList.remove('hidden');
+
+      document.getElementById('result-name').textContent = studentData.name;
+      document.getElementById('result-class').textContent = studentData.class;
+
+      const reviewContainer = document.getElementById('review-list');
+      reviewContainer.innerHTML = '';
+
+      QUESTION_BANK.forEach(q => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5";
+
+        let subItemsHtml = '';
+        q.subItems.forEach(sub => {
+          const userVal = document.getElementById(sub.key)?.value.trim() || '<span class="text-slate-400 italic">（未填写）</span>';
+          subItemsHtml += `
+            <div class="mt-3 pt-3 border-t border-slate-200 text-xs sm:text-sm">
+              <p class="font-semibold text-slate-800">${sub.label}</p>
+              <div class="mt-1.5 grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="p-2.5 bg-white border border-slate-200 rounded-lg">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">你的作答：</span>
+                  <p class="text-slate-800">${userVal}</p>
+                </div>
+                <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block mb-0.5">参考答案与采分要点：</span>
+                  <p class="text-emerald-950 font-medium">${sub.answer}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <h4 class="font-bold text-slate-900 text-sm sm:text-base flex items-center justify-between">
+            <span>${q.title}</span>
+            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">答案已解锁</span>
+          </h4>
+          ${subItemsHtml}
+        `;
+        reviewContainer.appendChild(card);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 重新作答
+    function restartExam() {
+      location.reload();
+    }
+
+    // 插入句式脚手架
+    function insertKeyword(elemId, text) {
+      const el = document.getElementById(elemId);
+      if (!el) return;
+      el.value = text;
+      el.focus();
+    }
+
+    // 切换马来文翻译展开/收起
+    function toggleTranslation(prefix) {
+      const box = document.getElementById(`${prefix}-trans`);
+      if (box) {
+        box.classList.toggle('hidden');
+      }
+    }
+
+    // Web Speech API 朗读文本
+    function speakText(textOrElemId, lang = 'zh-CN') {
+      if (!('speechSynthesis' in window)) {
+        showModal('提示', '当前浏览器暂不支持语音朗读功能，建议使用 Chrome 或 Edge 浏览器体验。');
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // 停止当前正在播报的声音
+
+      let content = textOrElemId;
+      const el = document.getElementById(textOrElemId);
+      if (el) {
+        content = el.innerText || el.textContent;
+      }
+
+      if (!content.trim()) return;
+
+      const utterance = new SpeechSynthesisUtterance(content);
+      utterance.lang = lang;
+      utterance.rate = 0.95; // 稍微放慢语速利于学生听懂
+      utterance.pitch = 1.0;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // 支持在姓名输入框直接回车
+    document.getElementById('input-name').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        startExam();
+      }
+    });
+
+    // 从 Google Apps Script 加载成绩榜/提交记录
+    async function loadLeaderboard() {
+      const loading = document.getElementById('leaderboard-loading');
+      const empty = document.getElementById('leaderboard-empty');
+      const list = document.getElementById('leaderboard-list');
+      const refreshIcon = document.getElementById('icon-refresh');
+
+      loading.classList.remove('hidden');
+      empty.classList.add('hidden');
+      list.classList.add('hidden');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const response = await fetch(`${GOOGLE_APP_URL}?action=get_leaderboard&t=${Date.now()}`);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+
+        loading.classList.add('hidden');
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+
+        if (Array.isArray(data) && data.length > 0) {
+          list.innerHTML = '';
+          data.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = "py-2 px-1 flex items-center justify-between text-xs";
+            
+            // 前三名标牌颜色
+            let rankBadge = `<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 inline-flex items-center justify-center font-bold text-[11px]">${index + 1}</span>`;
+            if (index === 0) rankBadge = `<span class="w-5 h-5 rounded-full bg-amber-400 text-white inline-flex items-center justify-center font-bold text-[11px] shadow-xs">🥇</span>`;
+            else if (index === 1) rankBadge = `<span class="w-5 h-5 rounded-full bg-slate-300 text-slate-800 inline-flex items-center justify-center font-bold text-[11px] shadow-xs">🥈</span>`;
+            else if (index === 2) rankBadge = `<span class="w-5 h-5 rounded-full bg-amber-600 text-white inline-flex items-center justify-center font-bold text-[11px] shadow-xs">🥉</span>`;
+
+            const sName = item.name || item[0] || '匿名同学';
+            const sClass = item.class || item[1] || '';
+            const sTime = item.timestamp || item[2] || item.time || '';
+
+            li.innerHTML = `
+              <div class="flex items-center gap-2.5">
+                ${rankBadge}
+                <div>
+                  <span class="font-bold text-slate-800">${sName}</span>
+                  ${sClass ? `<span class="ml-1 text-[11px] px-1.5 py-0.2 bg-blue-50 text-blue-600 rounded border border-blue-100">${sClass}</span>` : ''}
+                </div>
+              </div>
+              <div class="text-[11px] text-slate-400 font-mono">
+                ${sTime ? sTime.split(' ')[0] : '已完成'}
+              </div>
+            `;
+            list.appendChild(li);
+          });
+          list.classList.remove('hidden');
+        } else {
+          empty.classList.remove('hidden');
+        }
+      } catch (err) {
+        // 若脚本暂不支持 GET 或跨域读取，提供友好演示占位并提示
+        loading.classList.add('hidden');
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+        empty.innerHTML = `
+          <div class="text-slate-500 py-2">
+            <p class="font-medium text-slate-700 mb-0.5">🟢 数据提交通道已就绪</p>
+            <p class="text-[11px] text-slate-400">完成第 8 题提交后，学生作答内容将自动传送至 Google 表格。</p>
+          </div>
+        `;
+        empty.classList.remove('hidden');
+      }
+    }
+
+    // 页面初次加载时拉取一次成绩榜
+    window.addEventListener('DOMContentLoaded', () => {
+      loadLeaderboard();
+    });
+  </script>
+</body>
+</html>
